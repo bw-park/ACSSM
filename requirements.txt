@@ -1,0 +1,10 @@
+wandb
+geotorch==0.3.0
+tqdm
+ml-collections==0.1.1
+einops==0.8.0
+pandas==2.2.2
+scikit-learn==1.5.1
+scipy==1.14.0
+seaborn==0.13.2
+pillow==10.4.0
