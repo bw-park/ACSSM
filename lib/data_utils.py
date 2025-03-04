@@ -419,6 +419,6 @@ def adjust_obs_for_extrapolation(obs, obs_valid, obs_times=None, cut_time=None):
     else:
         mask_before_cut_time = obs_times < cut_time
         obs_valid_extrap *= mask_before_cut_time
-        obs_extrap = torch.where(obs_valid_extrap[:, :, None], obs_extrap, 0.)
+        obs_extrap = torch.where(obs_valid_extrap[:, :, None].bool(), obs_extrap, 0.)
 
     return obs_extrap, obs_valid_extrap

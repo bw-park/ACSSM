@@ -31,62 +31,30 @@ import os
 import gzip
 from torchvision.datasets.utils import download_url
 
+import tarfile
+
+def extract_tar_gz(tar_gz_path, extract_dir):
+    """
+    Extracts a .tar.gz file to a specified directory.
+    """
+    
+    if os.path.exists(os.path.join(extract_dir, 'pub12')):
+        return
+    
+    os.makedirs(extract_dir, exist_ok=True)
+    with tarfile.open(tar_gz_path, 'r:gz') as tar:
+        tar.extractall(path=extract_dir)
+    print(f"Extracted {tar_gz_path} to {extract_dir}")
+
+
 def download_ushcn(data_path):
     os.makedirs(data_path, exist_ok=True)
-    url = 'https://cdiac.ess-dive.lbl.gov/ftp/ushcn_daily/'
-    daily_state_files = [
-            'state01_AL.txt.gz',	 
-            'state02_AZ.txt.gz',	 
-            'state03_AR.txt.gz',	 
-            'state04_CA.txt.gz',	 
-            'state05_CO.txt.gz',	 
-            'state06_CT.txt.gz',	 
-            'state07_DE.txt.gz',	 
-            'state08_FL.txt.gz',	 
-            'state09_GA.txt.gz',	 
-            'state10_ID.txt.gz',	 
-            'state11_IL.txt.gz',	 
-            'state12_IN.txt.gz',	 
-            'state13_IA.txt.gz',	 
-            'state14_KS.txt.gz',	 
-            'state15_KY.txt.gz',	 
-            'state16_LA.txt.gz',	 
-            'state17_ME.txt.gz',	 
-            'state18_MD.txt.gz',	 
-            'state19_MA.txt.gz',	 
-            'state20_MI.txt.gz',	 
-            'state21_MN.txt.gz',	 
-            'state22_MS.txt.gz',	 
-            'state23_MO.txt.gz',	 
-            'state24_MT.txt.gz',	 
-            'state25_NE.txt.gz',	 
-            'state26_NV.txt.gz',	 
-            'state27_NH.txt.gz',	 
-            'state28_NJ.txt.gz',	 
-            'state29_NM.txt.gz',	 
-            'state30_NY.txt.gz',	 
-            'state31_NC.txt.gz',	 
-            'state32_ND.txt.gz',	 
-            'state33_OH.txt.gz',	 
-            'state34_OK.txt.gz',	 
-            'state35_OR.txt.gz',	 
-            'state36_PA.txt.gz',	 
-            'state37_RI.txt.gz',	 
-            'state38_SC.txt.gz',	 
-            'state39_SD.txt.gz',	 
-            'state40_TN.txt.gz',	 
-            'state41_TX.txt.gz',	 
-            'state42_UT.txt.gz',	 
-            'state43_VT.txt.gz',	 
-            'state44_VA.txt.gz',	 
-            'state45_WA.txt.gz',	 
-            'state46_WV.txt.gz',	 
-            'state47_WI.txt.gz',	 
-            'state48_WY.txt.gz'
-            ]
-    for state_file in daily_state_files:
-        state_url = url + state_file
-        download_url(state_url, data_path, state_file, None)
+    url = 'https://data.ess-dive.lbl.gov/catalog/d1/mn/v2/object/ess-dive-7b1e0d7f2fc3c43-20180727T175547656'
+    data_name = "ushcn_daily.tar.gz"
+    download_url(url, data_path, data_name, None)
+    file_name = os.path.join(data_path, data_name)
+    extract_tar_gz(file_name, data_path)
+
 
 def to_pandas(state_dir, target_dir):
     name = state_dir[:-4]+'.csv'
@@ -204,7 +172,7 @@ def to_pandas_(state_dir, target_dir):
 
 def convert_all_to_pandas(input_dir, output_dir):
     list_dir = os.listdir(input_dir)
-    txt_list_dir = [s for s in list_dir if ".txt" in s]
+    txt_list_dir = [s for s in list_dir if s.startswith('state') and s.endswith('.txt.gz')]
     state_list_dir = [s for s in txt_list_dir if "state" in s]
 
     for state_dir in state_list_dir:
@@ -406,6 +374,7 @@ def download_and_process_ushcn(file_path):
     download_ushcn(raw_path)
 
     # converts .txt files to .csv
+    raw_path = os.path.join(raw_path + "/pub12/ushcn_daily")
     convert_all_to_pandas(input_dir=raw_path, output_dir=raw_path)
 
     # reads the individual state .csv files and merges it to a single file named "daily_merged.csv"

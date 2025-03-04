@@ -18,7 +18,7 @@ In [Amortized Control of Continuous State Space Feynman-Kac Model for Irregular 
 This code is developed with Python3 and Pytorch. To set up an environment with the required packages,
 1. Create a virtual environment, for example:
 ```
-conda create -name acssm python=3.10
+conda create -n acssm python=3.10
 conda activate acssm
 ```
 2. Install Pytorch according to the [official instructions](https://pytorch.org/get-started/locally/).

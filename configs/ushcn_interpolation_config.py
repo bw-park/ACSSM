@@ -19,7 +19,7 @@ def get_ushcn_interpolation_configs():
     
     config.sample_rate = 0.5
     config.unobserved_rate = 0.2
-    config.epochs = 500 #100
+    config.epochs = 500
     config.lr = 1e-3
     config.wd = 0
     config.batch_size = 50

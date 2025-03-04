@@ -17,7 +17,7 @@ def get_person_activity_classification_configs():
     config.lamda_1 = 1e-6
     config.lamda_2 = 1e-8
 
-    config.epochs = 400 #500
+    config.epochs = 400
     config.lr = 1e-3
     config.wd = 1e-2     # 0
     config.batch_size = 256
